@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoD4 Color Float Converter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 350px;
+        }
+        h2 { color: #4CAF50; margin-bottom: 1.5rem; }
+        input[type="color"] {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #2d2d2d;
+            color: #fff;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            border-left: 5px solid #4CAF50;
+        }
+        .result-values {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>HEX TO FLOAT</h2>
+    <p>Pick a color:</p>
+    <input type="color" id="colorPicker" value="#ffffff">
+    
+    <input type="text" id="hexInput" value="#ffffff" placeholder="#FFFFFF">
+    
+    <div class="result-box">
+        <span class="result-values" id="floatResult">1.000 1.000 1.000</span>
+        <button onclick="copyToClipboard()">Copy Values</button>
+    </div>
+</div>
+
+<script>
+    const colorPicker = document.getElementById('colorPicker');
+    const hexInput = document.getElementById('hexInput');
+    const floatResult = document.getElementById('floatResult');
+
+    function updateValues(hex) {
+        // Eliminar el # si existe
+        hex = hex.replace('#', '');
+        
+        // Convertir a RGB
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+
+        // Calcular floats (0.0 - 1.0)
+        const rf = (r / 255).toFixed(3);
+        const gf = (g / 255).toFixed(3);
+        const bf = (b / 255).toFixed(3);
+
+        const result = `${rf} ${gf} ${bf}`;
+        floatResult.innerText = result;
+    }
+
+    colorPicker.addEventListener('input', (e) => {
+        const color = e.target.value;
+        hexInput.value = color.toUpperCase();
+        updateValues(color);
+    });
+
+    hexInput.addEventListener('input', (e) => {
+        let hex = e.target.value;
+        if (hex.length === 7) {
+            colorPicker.value = hex;
+            updateValues(hex);
+        }
+    });
+
+    function copyToClipboard() {
+        const text = floatResult.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+</script>
+
+</body>
+</html>
